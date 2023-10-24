@@ -127,7 +127,7 @@ class PreviewFragment : Fragment() {
     }
 
     /** File where the recording will be saved */
-    private val outputFile: File by lazy { createFile(requireContext(), "mp4") }
+    private val outputFile: File by lazy { createFile(requireContext(), "mp4", args) }
 
     /**
      * Setup a [Surface] for the encoder
@@ -381,7 +381,8 @@ class PreviewFragment : Fragment() {
                             requireView().context, arrayOf(outputFile.absolutePath), null, null)
 
                     // Launch external activity via intent to play video recorded using our provider
-                    startActivity(Intent().apply {
+                    Log.i("iufhg",outputFile.absolutePath )
+                    /*startActivity(Intent().apply {
                         action = Intent.ACTION_VIEW
                         type = MimeTypeMap.getSingleton()
                                 .getMimeTypeFromExtension(outputFile.extension)
@@ -389,7 +390,7 @@ class PreviewFragment : Fragment() {
                         data = FileProvider.getUriForFile(view.context, authority, outputFile)
                         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
                                 Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    })
+                    })*/
 
                     navController.popBackStack()
                 }
@@ -513,13 +514,13 @@ class PreviewFragment : Fragment() {
     companion object {
         private val TAG = PreviewFragment::class.java.simpleName
 
-        private const val RECORDER_VIDEO_BITRATE: Int = 10_000_000
+        private const val RECORDER_VIDEO_BITRATE: Int = 2_000_000
         private const val MIN_REQUIRED_RECORDING_TIME_MILLIS: Long = 1000L
 
         /** Creates a [File] named with the current date and time */
-        private fun createFile(context: Context, extension: String): File {
+        private fun createFile(context: Context, extension: String, args: PreviewFragmentArgs): File {
             val sdf = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS", Locale.US)
-            return File(context.filesDir, "VID_${sdf.format(Date())}.$extension")
+            return File(context.filesDir, "${args.height}X${args.width}isHardvare=${args.useHardware} VID_${sdf.format(Date())}.$extension")
         }
     }
 }
